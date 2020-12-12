@@ -4,9 +4,12 @@ import { join } from 'path';
 import { RestModule } from './rest/rest.module';
 
 @Module({
-  imports: [GraphQLModule.forRoot({
-    autoSchemaFile : join(process.cwd(),'src/schema.gql'),
-  }), RestModule],
+  imports: [
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
+    }),
+    RestModule,
+  ],
   controllers: [],
   providers: [],
 })
