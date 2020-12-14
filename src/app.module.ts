@@ -14,5 +14,3 @@ import { RestModule } from './rest/rest.module';
   providers: [],
 })
 export class AppModule {}
-
-//20201212
