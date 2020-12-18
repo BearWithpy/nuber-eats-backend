@@ -12,6 +12,7 @@ import { RestModule } from './rest/rest.module';
       port: 7777,
       username: 'postgres',
       password: '12345', //real pw..............:(
+      //icannotbelieveit!
       database: 'nuber-eats',
       synchronize: true,
       logging: true,
