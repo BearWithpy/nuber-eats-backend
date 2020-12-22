@@ -3,8 +3,8 @@ import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RestModule } from './rest/rest.module';
-import { Restaurant } from './rest/entities/restaurant.entitiy';
+import { RestModule } from './restaurants/restaurants.module';
+import { Restaurant } from './restaurants/entities/restaurant.entitiy';
 
 @Module({
   imports: [
