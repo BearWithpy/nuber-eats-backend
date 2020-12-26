@@ -28,4 +28,3 @@ export class Restaurant {
   address: string;
 }
 
-// MERRY CHRISTMAS@@@@@@@@@@@@@@@@@@@@@
