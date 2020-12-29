@@ -14,7 +14,7 @@ export class UsersService {
     try {
       const exists = await this.users.findOne({ email });
       if (exists) {
-        //make error cuz there's already exists info
+        //make error
         return;
       }
       await this.users.save(this.users.create({ email, password, role }));
