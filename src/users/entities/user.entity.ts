@@ -9,7 +9,6 @@ import * as bycrpt from 'bcrypt';
 import { BeforeInsert, Column, Entity } from 'typeorm';
 import { InternalServerErrorException } from '@nestjs/common';
 import { IsEmail, IsEnum } from 'class-validator';
-import { applySchemaTransforms } from 'graphql-tools';
 
 enum UserRole {
   Client,
