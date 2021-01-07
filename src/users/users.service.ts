@@ -15,7 +15,7 @@ export class UsersService {
     private readonly config: ConfigService,
     private readonly jwtService: JwtService,
   ) {
-    this.jwtService.hello();
+    //this.jwtService.hello();
   }
 
   async createAccount({
@@ -42,6 +42,7 @@ export class UsersService {
     // find the user with the email
     // check if the password is correct
     // make a JWT and give it to the user
+    // :( So Difficult
     try {
       const user = await this.users.findOne({ email });
       if (!user) {
