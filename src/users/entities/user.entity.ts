@@ -38,7 +38,7 @@ export class User extends CoreEntity {
 
   @Column({ default: false })
   @Field((type) => Boolean)
-  veficated: boolean;
+  verificated: boolean;
 
   @BeforeInsert()
   @BeforeUpdate()
