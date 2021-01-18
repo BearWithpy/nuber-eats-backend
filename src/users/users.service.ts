@@ -90,7 +90,7 @@ export class UserService {
     const user = await this.users.findOne(userId);
     if (email) {
       user.email = email;
-      user.verificated = false;
+      user.verified = false;
       await this.verification.save(this.verification.create({ user }));
     }
     if (password) {
@@ -98,5 +98,17 @@ export class UserService {
     } // for execute @BeforeUpdate hook
 
     return this.users.save(user);
+  }
+
+  async verifyEmail(code: string): Promise<boolean> {
+    const verification = await this.verification.findOne(
+      { code },
+      { relations: ['user'] },
+    );
+    if (verification) {
+      verification.user.verified = true;
+      this.users.save(verification.user);
+    }
+    return false;
   }
 }
