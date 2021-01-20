@@ -57,5 +57,8 @@ export class UserResolver {
     @Args('input') { code }: VerifyEmailInput,
   ): Promise<VerifyEmailOutput> {
     return this.usersService.verifyEmail(code);
+    //same... async func
+    // const { ok, error } = await this.usersService.verifyEmail(code);
+    // return { ok, error };
   }
 }
