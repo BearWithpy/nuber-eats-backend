@@ -1,26 +1,28 @@
+import got from 'got';
+import * as FormData from 'form-data';
 import { Inject, Injectable } from '@nestjs/common';
 import { CONFIG_OPTIONS } from 'src/common/common.constants';
 import { MailModuleOptions } from './mail.interfaces';
-import got from 'got';
-import * as FormData from 'form-data';
 
 @Injectable()
 export class MailService {
   constructor(
     @Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions,
   ) {
-    //console.log(options);
     this.sendEmail('testing', 'test');
   }
 
-  private async sendEmail(subject: string, content: string, to?: string) {
+  private async sendEmail(subject: string, content: string) {
     const form = new FormData();
-    form.append('from', `Excited User <mailgun@${this.options.domain}>`);
-    form.append('to', `pks5294@naver.com`);
+    form.append('from', `mailgun@${this.options.domain}`);
+    form.append('to', `pksjmh5295@gmail.com`);
+    //form.append('to', `pks5294@naver.com`);
     form.append('subject', subject);
-    form.append('text', content);
+    form.append('template', 'verify-email');
+    form.append('v:code', 'aaaa');
+    form.append('v:username', 'Jas!!');
     const response = await got(
-      `https://api.mailgun.net/v3/${this.options.domain}/messages/`,
+      `https://api.mailgun.net/v3/${this.options.domain}/messages`,
       {
         method: 'POST',
         headers: {
