@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
-import { CreateAccountInput, CreateAccountOutput } from './dtos/create-account.dto';
+import {
+  CreateAccountInput,
+  CreateAccountOutput,
+} from './dtos/create-account.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { User } from './entities/user.entity';
 import { JwtService } from 'src/jwt/jwt.service';
@@ -121,7 +124,8 @@ export class UserService {
       );
       if (verification) {
         verification.user.verified = true;
-        this.users.save(verification.user);
+        await this.users.save(verification.user);
+        await this.verifications.delete(verification.id);
         return { ok: true };
       }
       return { ok: false, error: 'Verification not found.' };
