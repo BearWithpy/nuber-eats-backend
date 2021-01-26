@@ -32,6 +32,7 @@ export class UserService {
   }: CreateAccountInput): Promise<CreateAccountOutput> {
     try {
       const exists = await this.users.findOne({ email });
+      console.log(exists);
       if (exists) {
         return { ok: false, error: 'There is a user with that email already' };
       }
@@ -69,7 +70,6 @@ export class UserService {
           error: 'Wrong password',
         };
       }
-
       const token = this.jwtService.sign(user.id);
       return {
         ok: true,
