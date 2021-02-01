@@ -255,5 +255,9 @@ describe('UserService', () => {
     });
   });
 
-  it.todo('verifyEmail');
+  describe('verifyEmail', () => {
+    it.todo('should verify email');
+    it.todo('should fail on verification not found');
+    it.todo('should fail on exception');
+  });
 });
