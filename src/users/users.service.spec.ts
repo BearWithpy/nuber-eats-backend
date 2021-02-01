@@ -15,14 +15,14 @@ const mockRepository = () => ({
   delete: jest.fn(),
 });
 
-const mockJwtService = {
+const mockJwtService = () => ({
   sign: jest.fn(() => 'signed-token-baby'),
   verify: jest.fn(),
-};
+});
 
-const mockMailService = {
+const mockMailService = () => ({
   sendVerificationEmail: jest.fn(),
-};
+});
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
@@ -47,11 +47,11 @@ describe('UserService', () => {
         },
         {
           provide: JwtService,
-          useValue: mockJwtService,
+          useValue: mockJwtService(),
         },
         {
           provide: MailService,
-          useValue: mockMailService,
+          useValue: mockMailService(),
         },
       ],
     }).compile();
@@ -69,7 +69,7 @@ describe('UserService', () => {
   describe('createAccount', () => {
     const createAccountArgs = {
       email: 'js@email.com',
-      password: 'Password',
+      password: 'js.password',
       role: 0,
     };
 
@@ -125,7 +125,6 @@ describe('UserService', () => {
     it('should fail on exception', async () => {
       usersRepository.findOne.mockRejectedValue(new Error());
       const result = await service.createAccount(createAccountArgs);
-      //console.log(result);
       expect(result).toEqual({ ok: false, error: "Couldn't create account" });
     });
   });
@@ -133,11 +132,11 @@ describe('UserService', () => {
   describe('login', () => {
     const loginArgs = {
       email: 'js@email.com',
-      password: 'Password',
+      password: 'js.password',
     };
-
     it('should fail if user does not exist', async () => {
       usersRepository.findOne.mockResolvedValue(null);
+
       const result = await service.login(loginArgs);
 
       expect(usersRepository.findOne).toHaveBeenCalledTimes(1);
@@ -171,6 +170,12 @@ describe('UserService', () => {
       expect(jwtService.sign).toHaveBeenCalledWith(expect.any(Number));
       expect(result).toEqual({ ok: true, token: 'signed-token-baby' });
     });
+
+    it('should fail on exception', async () => {
+      usersRepository.findOne.mockRejectedValue(new Error());
+      const result = await service.login(loginArgs);
+      expect(result).toEqual({ ok: false, error: "Can't log user in." });
+    });
   });
 
   describe('findById', () => {
@@ -183,7 +188,7 @@ describe('UserService', () => {
       expect(result).toEqual({ ok: true, user: findByIdArgs });
     });
 
-    it('should fail if no user found', async () => {
+    it('should fail if no user is found', async () => {
       usersRepository.findOneOrFail.mockRejectedValue(new Error());
       const result = await service.findById(1);
       expect(result).toEqual({ ok: false, error: 'User Not Found' });
@@ -200,7 +205,6 @@ describe('UserService', () => {
         userId: 1,
         input: { email: 'js@new.com' },
       };
-
       const newVerification = {
         code: 'code',
       };
@@ -227,6 +231,7 @@ describe('UserService', () => {
         newVerification,
       );
 
+      expect(mailService.sendVerificationEmail).toHaveBeenCalledTimes(1);
       expect(mailService.sendVerificationEmail).toHaveBeenCalledWith(
         newUser.email,
         newVerification.code,
@@ -245,7 +250,6 @@ describe('UserService', () => {
       );
       expect(usersRepository.save).toHaveBeenCalledTimes(1);
       expect(usersRepository.save).toHaveBeenCalledWith(editProfileArgs.input);
-
       expect(result).toEqual({ ok: true });
     });
 
@@ -265,6 +269,7 @@ describe('UserService', () => {
         id: 1,
       };
       verificationsRepository.findOne.mockResolvedValue(mockedVerification);
+
       const result = await service.verifyEmail('');
 
       expect(verificationsRepository.findOne).toHaveBeenCalledTimes(1);
@@ -281,11 +286,13 @@ describe('UserService', () => {
       );
       expect(result).toEqual({ ok: true });
     });
+
     it('should fail on verification not found', async () => {
       verificationsRepository.findOne.mockResolvedValue(undefined);
       const result = await service.verifyEmail('');
       expect(result).toEqual({ ok: false, error: 'Verification not found.' });
     });
+
     it('should fail on exception', async () => {
       verificationsRepository.findOne.mockRejectedValue(new Error());
       const result = await service.verifyEmail('');
