@@ -32,11 +32,17 @@ describe('JwtService', () => {
   describe('sign', () => {
     it('should return a signed token', () => {
       const ID = 1;
-      service.sign(ID);
+      const token = service.sign(ID);
+      expect(typeof token).toBe('string');
       expect(jwt.sign).toHaveBeenCalledTimes(1);
       expect(jwt.sign).toHaveBeenCalledWith({ id: 1 }, TEST_KEY);
     });
   });
 
-  it.todo('verify');
+  describe('verify', () => {
+    it('should return the decoded token', () => {});
+  });
 });
+
+
+//20210205
