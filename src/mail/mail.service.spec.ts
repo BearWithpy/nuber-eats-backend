@@ -1,6 +1,6 @@
-import { Test } from '@nestjs/testing';
-import * as FormData from 'form-data';
 import got from 'got';
+import * as FormData from 'form-data';
+import { Test } from '@nestjs/testing';
 import { CONFIG_OPTIONS } from 'src/common/common.constants';
 import { MailService } from './mail.service';
 
@@ -40,6 +40,7 @@ describe('MailService', () => {
         code: 'code',
       };
       jest.spyOn(service, 'sendEmail').mockImplementation(async () => true);
+
       service.sendVerificationEmail(
         sendVerificationEmailArgs.email,
         sendVerificationEmailArgs.code,
@@ -60,6 +61,7 @@ describe('MailService', () => {
     it('sends email', async () => {
       const ok = await service.sendEmail('', '', []);
       const formSpy = jest.spyOn(FormData.prototype, 'append');
+
       expect(formSpy).toHaveBeenCalled();
       expect(got.post).toHaveBeenCalledTimes(1);
       expect(got.post).toHaveBeenCalledWith(
@@ -68,6 +70,7 @@ describe('MailService', () => {
       );
       expect(ok).toEqual(true);
     });
+
     it('fails on error', async () => {
       jest.spyOn(got, 'post').mockImplementation(() => {
         throw new Error();
