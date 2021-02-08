@@ -12,11 +12,7 @@ export class MailService {
     //this.sendEmail('testing', 'verify-email');
   }
 
-  private async sendEmail(
-    subject: string,
-    template: string,
-    emailVars: EmailVar[],
-  ) {
+  async sendEmail(subject: string, template: string, emailVars: EmailVar[]) {
     const form = new FormData();
     form.append('from', `Jason from Nuber Eats mailgun@${this.options.domain}`);
     form.append('to', `pksjmh5295@gmail.com`);
