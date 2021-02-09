@@ -40,11 +40,11 @@ describe('MailService', () => {
         code: 'code',
       };
       jest.spyOn(service, 'sendEmail').mockImplementation(async () => true);
-
       service.sendVerificationEmail(
         sendVerificationEmailArgs.email,
         sendVerificationEmailArgs.code,
       );
+
       expect(service.sendEmail).toHaveBeenCalledTimes(1);
       expect(service.sendEmail).toHaveBeenCalledWith(
         'Verify Your Email',
