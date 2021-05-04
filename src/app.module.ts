@@ -14,6 +14,8 @@ import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { MailModule } from './mail/mail.module';
 import * as Joi from 'joi';
+import { Restaurant } from './restaurants/entities/restaurant.entitiy';
+import { Category } from './restaurants/entities/category.entity';
 
 @Module({
   imports: [
@@ -44,7 +46,7 @@ import * as Joi from 'joi';
       synchronize: process.env.NODE_ENV !== 'prod',
       logging:
         process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
-      entities: [User, Verification],
+      entities: [User, Verification, Restaurant, Category],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
