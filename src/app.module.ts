@@ -72,3 +72,6 @@ export class AppModule implements NestModule {
       .forRoutes({ path: '/graphql', method: RequestMethod.POST });
   }
 }
+
+// 20210506 ToDos
+// Next lec.
