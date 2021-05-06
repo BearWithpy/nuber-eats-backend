@@ -1,3 +1,4 @@
+import { RestaurantsModule } from './restaurants/restaurants.module';
 import {
   MiddlewareConsumer,
   Module,
@@ -61,6 +62,7 @@ import { Category } from './restaurants/entities/category.entity';
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
     UsersModule,
+    RestaurantsModule,
   ],
   controllers: [],
   providers: [],
@@ -72,6 +74,3 @@ export class AppModule implements NestModule {
       .forRoutes({ path: '/graphql', method: RequestMethod.POST });
   }
 }
-
-// 20210506 ToDos
-// Next lec.
