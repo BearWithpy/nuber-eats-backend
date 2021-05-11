@@ -27,20 +27,24 @@ export class RestaurantService {
       newRestaurant.owner = owner;
       const categoryName = createRestaurantInput.categoryName
         .trim()
-        .toLowerCase()
-        .replace(/ +/g, ' ');
+        .toLowerCase();
       const categorySlug = categoryName.replace(/ /g, '-');
-
       let category = await this.categories.findOne({ slug: categorySlug });
       if (!category) {
         category = await this.categories.save(
           this.categories.create({ slug: categorySlug, name: categoryName }),
         );
       }
+      newRestaurant.category = category;
       await this.restaurants.save(newRestaurant);
-      return { ok: true };
+      return {
+        ok: true,
+      };
     } catch {
-      return { ok: false, error: 'Could not create restaurant' };
+      return {
+        ok: false,
+        error: 'Could not create restaurant',
+      };
     }
   }
 }
