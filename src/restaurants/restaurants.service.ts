@@ -4,7 +4,6 @@ import {
 } from './dtos/delete-restaurant.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EditProfileOutput } from 'src/users/dtos/edit-profile.dto';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import {
@@ -27,6 +26,33 @@ export class RestaurantService {
     @InjectRepository(Category)
     private readonly categories: CategoryRepository,
   ) {}
+
+  //////////////////////////////////////
+  async checkRestaurant<T>(
+    owner: User,
+    inputdata: T,
+  ): Promise<{
+    ok: boolean;
+    error?: string;
+  }> {
+    const restaurant = await this.restaurants.findOne(inputdata);
+    if (!restaurant) {
+      return {
+        ok: false,
+        error: 'Restaurant not found',
+      };
+    }
+    if (owner.id !== restaurant.ownerId) {
+      return {
+        ok: false,
+        error: "You can't edit a restaurant you don't own",
+      };
+    }
+    return {
+      ok: true,
+    };
+  }
+  //////////////////////////////////////
 
   async createRestaurant(
     owner: User,
@@ -54,23 +80,16 @@ export class RestaurantService {
   async editRestaurant(
     owner: User,
     editRestaurantInput: EditRestaurantInput,
-  ): Promise<EditProfileOutput> {
+  ): Promise<EditRestaurantOutput> {
     try {
-      const restaurant = await this.restaurants.findOne(
+      const result = await this.checkRestaurant(
+        owner,
         editRestaurantInput.restaurantId,
       );
-      if (!restaurant) {
-        return {
-          ok: false,
-          error: 'Restaurant not found',
-        };
+      if (result.ok === false) {
+        return result;
       }
-      if (owner.id !== restaurant.ownerId) {
-        return {
-          ok: false,
-          error: "You can't edit a restaurant you don't own",
-        };
-      }
+
       let category: Category = null;
       if (editRestaurantInput.categoryName) {
         category = await this.categories.getOrCreate(
@@ -84,31 +103,25 @@ export class RestaurantService {
           ...(category && { category }),
         },
       ]);
-
       return { ok: true };
     } catch {
       return { ok: false, error: 'Could not edit Restaurant' };
     }
   }
+
   async deleteRestaurant(
     owner: User,
     { restaurantId }: DeleteRestaurantInput,
   ): Promise<DeleteRestaurantOutput> {
     try {
+      const result = await this.checkRestaurant(owner, restaurantId);
+      if (result.ok === false) {
+        return result;
+      }
+
       const restaurant = await this.restaurants.findOne(restaurantId);
-      if (!restaurant) {
-        return {
-          ok: false,
-          error: 'Restaurant not found',
-        };
-      }
-      if (owner.id !== restaurant.ownerId) {
-        return {
-          ok: false,
-          error: "You can't delete a restaurant you don't own",
-        };
-      }
       console.log('will delete', restaurant);
+
       //await this.restaurants.delete(restaurantId);
       return { ok: true };
     } catch {
