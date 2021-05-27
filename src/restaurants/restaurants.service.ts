@@ -19,6 +19,7 @@ import { Restaurant } from './entities/restaurant.entitiy';
 import { CategoryRepository } from './repositories/category.repository';
 import { AllCategoriesOutput } from './dtos/all-categories.dto';
 import { CategoryInput, CategoryOutput } from './dtos/category.dto';
+import { RestaurantsInput, RestaurantsOutput } from './dtos/restaurants.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -123,7 +124,9 @@ export class RestaurantService {
 
       const restaurant = await this.restaurants.findOne(restaurantId);
       console.log('will delete', restaurant);
+      //Delete...But Idontwant///////////////////////////////////////
       //await this.restaurants.delete(restaurantId);
+      /////////////////////////////////////////////////
       return { ok: true };
     } catch {
       return {
@@ -171,10 +174,11 @@ export class RestaurantService {
         take: 25,
         skip: (page - 1) * 25,
       });
-      category.restaurants = restaurants;
+
       const totalResults = await this.countRestaurants(category);
       return {
         ok: true,
+        restaurants,
         category,
         totalPages: Math.ceil(totalResults / 25),
       };
@@ -185,7 +189,23 @@ export class RestaurantService {
       };
     }
   }
+  async allRestaurants({ page }: RestaurantsInput): Promise<RestaurantsOutput> {
+    try {
+      const [restaurants, totalResults] = await this.restaurants.findAndCount({
+        skip: (page - 1) * 25,
+        take: 25,
+      });
+      return {
+        ok: true,
+        results: restaurants,
+        totalPages: Math.ceil(totalResults / 25),
+        totalResults,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: 'Could not load restaurants',
+      };
+    }
+  }
 }
-
-// 210527 TODOs
-// next...
