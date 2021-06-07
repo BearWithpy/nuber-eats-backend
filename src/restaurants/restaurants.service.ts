@@ -260,6 +260,3 @@ export class RestaurantService {
     }
   }
 }
-
-// 210604
-// next lec.
