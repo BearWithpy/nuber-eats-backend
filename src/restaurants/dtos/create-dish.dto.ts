@@ -10,8 +10,8 @@ export class CreateDishInput extends PickType(Dish, [
   'options',
 ]) {
   @Field((type) => Int)
-  retaurantId: number;
+  restaurantId: number;
 }
 
 @ObjectType()
-export class CreateDishOutput extends CoreOutput{}
+export class CreateDishOutput extends CoreOutput {}
